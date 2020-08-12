@@ -1,0 +1,20 @@
+galaxy_info:
+  role_name: cups
+  author: Alan Jenkins
+  description: Install the CUPS printer service, and apply my preferred defaults.
+
+  license: GPLv3
+
+  # lineinfile: "path" (not "dest")
+  min_ansible_version: 2.3
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all

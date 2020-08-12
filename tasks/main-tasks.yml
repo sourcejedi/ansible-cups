@@ -1,0 +1,78 @@
+- name: Check value of cups_disable_browsed
+  assert:
+    that:
+      - cups_disable_browsed in [True, False, None]
+
+- name: Install CUPS printing service
+  package:
+    name: "cups"
+    state: present
+
+- name: Enable cups service
+  service:
+    name: cups
+    enabled: yes
+
+- name: Start cups service
+  service:
+    name: cups
+    state: started
+
+
+# We modify cups-browsed.conf, so let's make sure it is installed.
+
+- name: Install cups-browsed [deb package name]
+  package:
+    name: cups-browsed
+    state: present
+  when: ansible_os_family == 'Debian' and
+        cups_disable_browsed != True
+
+- name: Install cups-browsed [redhat package name]
+  package:
+    name: cups-filters
+    state: present
+  when: ansible_os_family == 'RedHat' and
+        cups_disable_browsed != True
+
+
+- name: Enable cups-browsed service (if desired)
+  service:
+    name: cups-browsed
+    enabled: True
+  when: cups_disable_browsed == False
+
+- name: Start cups-browsed service (if desired)
+  service:
+    name: cups-browsed
+    state: started
+  when: cups_disable_browsed == False
+
+- name: Disable cups-browsed service (if desired)
+  service:
+    name: cups-browsed
+    enabled: False
+  when: cups_disable_browsed == True
+
+- name: Stop cups-browsed service (if desired)
+  service:
+    name: cups-browsed
+    state: stopped
+  when: cups_disable_browsed == True
+
+- name: Set cups-browsed RemoteProtocols
+  lineinfile:
+    path: /etc/cups/cups-browsed.conf
+    backup: yes
+    regexp: '^( *# *)?BrowseRemoteProtocols '
+    line: 'BrowseRemoteProtocols {{ cups_browsed_remote_protocols }}'
+  notify: [ 'Restart cups-browsed' ]
+  when: cups_disable_browsed != True
+
+- name: Set cups ErrorPolicy
+  lineinfile:
+    path: /etc/cups/cupsd.conf
+    backup: yes
+    regexp: '^( *# *)?ErrorPolicy '
+    line: 'ErrorPolicy {{ cups_error_policy }}'
+  notify: [ 'Restart cups' ]

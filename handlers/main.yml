@@ -1,0 +1,26 @@
+- listen: "Restart cups-browsed"
+  name: "Simulate stopping cups-browsed"
+  service: 
+    name: "cups-browsed"
+    state: stopped
+  check_mode: yes
+  register: cups_browsed_need_restart
+
+# cups-browsed does not have a `-t` option we can use in advance.
+- name: "Restart cups-browsed"
+  service: 
+    name: "cups-browsed"
+    state: restarted
+  when: cups_browsed_need_restart.changed
+
+  
+- listen: "Restart cups"
+  name: "Test cupsd.conf for syntax errors"
+  command: /usr/sbin/cupsd -t
+  check_mode: no
+  changed_when: False
+
+- name: "Restart cups"
+  service:
+    name: "cups"
+    state: restarted

@@ -1,0 +1,12 @@
+---
+- include: main-tasks.yml
+  tags: cups
+  
+  # Code pattern adapted from disable_unwanted_servers.
+  vars:
+    cups_disable_services:
+      "{{ ['cups-browsed'] if cups_disable_browsed is True else [] }}"
+    cups_enable_services:
+      "{{ ['cups-browsed'] if cups_disable_browsed is False else [] }}"
+    
+  

@@ -1,0 +1,4 @@
+cups_disable_browsed: None
+cups_browsed_remote_protocols: "dnssd"
+
+cups_error_policy: "retry-job"
