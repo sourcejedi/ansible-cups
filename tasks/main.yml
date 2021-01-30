@@ -5,6 +5,6 @@
   # Code pattern adapted from disable_unwanted_servers.
   vars:
     cups_disable_services:
-      "{{ ['cups-browsed'] if cups_disable_browsed is True else [] }}"
+      "{{ ['cups-browsed'] if cups_disable_browsed == True else [] }}"
     cups_enable_services:
-      "{{ ['cups-browsed'] if cups_disable_browsed is False else [] }}"
+      "{{ ['cups-browsed'] if cups_disable_browsed == False else [] }}"

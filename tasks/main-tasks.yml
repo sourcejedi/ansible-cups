@@ -26,39 +26,39 @@
     name: cups-browsed
     state: present
   when: ansible_os_family == 'Debian' and
-        cups_disable_browsed is not True
+        cups_disable_browsed != True
 
 - name: Install cups-browsed [redhat package name]
   package:
     name: cups-filters
     state: present
   when: ansible_os_family == 'RedHat' and
-        cups_disable_browsed is not True
+        cups_disable_browsed != True
 
 
 - name: Enable cups-browsed service (if desired)
   service:
     name: cups-browsed
     enabled: True
-  when: cups_disable_browsed is False
+  when: cups_disable_browsed == False
 
 - name: Start cups-browsed service (if desired)
   service:
     name: cups-browsed
     state: started
-  when: cups_disable_browsed is False
+  when: cups_disable_browsed == False
 
 - name: Disable cups-browsed service (if desired)
   service:
     name: cups-browsed
     enabled: False
-  when: cups_disable_browsed is True
+  when: cups_disable_browsed == True
 
 - name: Stop cups-browsed service (if desired)
   service:
     name: cups-browsed
     state: stopped
-  when: cups_disable_browsed is True
+  when: cups_disable_browsed == True
 
 - name: Set cups-browsed RemoteProtocols
   lineinfile:
@@ -67,7 +67,7 @@
     regexp: '^( *# *)?BrowseRemoteProtocols '
     line: 'BrowseRemoteProtocols {{ cups_browsed_remote_protocols }}'
   notify: [ 'Restart cups-browsed' ]
-  when: cups_disable_browsed is not True
+  when: cups_disable_browsed != True
 
 - name: Set cups ErrorPolicy
   lineinfile:
