@@ -1,2 +1,5 @@
 skip_list:
+ # [E601] "Don't compare to literal True/False"
+ # cups_disable_browsed is a "tri-state" variable: True, False, or None.
+ # My code must explicitly test for False, to distinguish it from None.
  - '601'
