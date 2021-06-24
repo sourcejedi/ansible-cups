@@ -1,3 +1,9 @@
+# I am not using ansible-lint, but ansible-galaxy is.
+#
+# Warning: it appears the use of this file with Galaxy is not widely
+# documented, and might not be valued by the maintainer.
+# https://github.com/ansible-community/ansible-lint/discussions/1284
+
 skip_list:
  # [E601] "Don't compare to literal True/False"
  # cups_disable_browsed is a "tri-state" variable: True, False, or None.

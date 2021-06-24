@@ -14,6 +14,12 @@
   when: cups_browsed_need_restart.changed
 
 
+- listen: "Apply ErrorPolicy"
+  name: "Change ErrorPolicy for any existing printers"
+  script:
+    cmd: apply_error_policy.sh "{{ cups_error_policy }}"
+  register: lpadmin
+
 - listen: "Restart cups"
   name: "Test cupsd.conf for syntax errors"
   command: /usr/sbin/cupsd -t

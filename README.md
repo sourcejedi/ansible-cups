@@ -5,13 +5,14 @@ Install the CUPS printer service, and apply my preferred defaults.
 
 ## Status
 
-This role applies a default configuration that I personally prefer, as described below.
+This role applies my default configuration, described below.
 It should work on Debian, Ubuntu, and Fedora.
 
-This does not specifically enable
-[Driverless Printing](https://wiki.debian.org/CUPSDriverlessPrinting).
+This does not specifically enable [Driverless Printing][driverless].
 If your installation requires specific steps in order to enable driverless printing,
 the role will not perform those steps.
+
+[driverless]: https://wiki.debian.org/CUPSDriverlessPrinting
 
 ## Configuration
 
@@ -41,7 +42,7 @@ port 631).
 
     cups_browsed_remote_protocols: "dnssd"
     
-You could disable `dnssd` if you want:
+You can disable `dnssd` if you want:
 
     cups_browsed_remote_protocols: "none"
 
@@ -56,9 +57,14 @@ This role follows Ubuntu.
     cups_error_policy: "retry-job"
 
 There are other possible values, including `abort-job`.
-I don't know the exact behaviour of each possible option.
+I don't know the exact behaviour of each option.
 
-    
+If the role setting differs from the current value in cupsd.conf,
+then a one-off script is run, to change the ErrorPolicy for printers
+which were set up automatically at install time, and any other
+existing printers.
+
+
 ## License
 
 This role is licensed under GPLv3.
