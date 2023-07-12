@@ -20,21 +20,26 @@
 
 
 # We modify cups-browsed.conf, so let's make sure it is installed.
+- block:
+    - name: Install cups-browsed [deb package name]
+      package:
+        name: cups-browsed
+        state: present
+  rescue:
+    - name: Install cups-browsed [old redhat package name]
+      package:
+        name: cups-filters
+        state: present
+  when: cups_disable_browsed != True
 
-- name: Install cups-browsed [deb package name]
-  package:
-    name: cups-browsed
-    state: present
-  when: ansible_os_family == 'Debian' and
-        cups_disable_browsed != True
+- name: Get list of services
+  service_facts:
 
-- name: Install cups-browsed [redhat package name]
-  package:
-    name: cups-filters
-    state: present
-  when: ansible_os_family == 'RedHat' and
-        cups_disable_browsed != True
-
+- name: Check if cups-browsed service exists
+  set_fact:
+    cups_browsed_service_exists:
+      "{{ 'cups-browsed.service' in services or
+          'cups-browsed' in services }}"
 
 - name: Enable cups-browsed service (if desired)
   service:
@@ -52,13 +57,15 @@
   service:
     name: cups-browsed
     enabled: False
-  when: cups_disable_browsed == True
+  when: cups_disable_browsed == True and
+            cups_browsed_service_exists
 
 - name: Stop cups-browsed service (if desired)
   service:
     name: cups-browsed
     state: stopped
-  when: cups_disable_browsed == True
+  when: cups_disable_browsed == True and
+            cups_browsed_service_exists
 
 - name: Set cups-browsed RemoteProtocols
   lineinfile:
